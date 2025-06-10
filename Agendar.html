@@ -46,7 +46,7 @@
                 await addDoc(collection(db, "dados"), { 
                     titulo: Title,
                     text: texto,
-                    timestamp: new Date()
+                    timestamp: dma
                 });
                 alert("Created Post!");
                 window.location.href = "index.html"
