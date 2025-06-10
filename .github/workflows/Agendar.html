@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PotatoForums - Creating Forum</title>
+    <link rel="stylesheet" href="Styles.css">
+</head>
+<body>
+    <label id="Ttitulo">Title</label>
+    <label id="TContent">Content</label>
+    <label id="TName">Username</label>
+    <div><img id="Bk" src="Background-image.png"></div>
+    <div id="container"></div>
+    <div id="BigBox"></div>
+    <ul id="dataList"></ul>
+    <textarea type="text" class="ForumCreat" id="userTitle" placeholder="Title" rows="0" cols="50"></textarea>
+    <textarea type="text" class="ForumCreat" id="Usercontent" placeholder="Content" rows="0" cols="50"></textarea> 
+    <input type="date" class="ForumCreat" id="UserDate" placeholder="Content" rows="0" cols="50"></input>  
+    <button id="Suby" onclick="saveData()">Submit</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, getCountFromServer } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+        apiKey: "AIzaSyB7GEojfZL3O9OwXc--apObjn9OYJhY9vM",
+        authDomain: "agenda-d8f25.firebaseapp.com",
+        projectId: "agenda-d8f25",
+        storageBucket: "agenda-d8f25.firebasestorage.app",
+        messagingSenderId: "562634825695",
+        appId: "1:562634825695:web:6ee03ebd8bd29d98972e6a"
+
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.saveData = async function() {
+            const Title = document.getElementById("userTitle").value.trim();
+            const texto = document.getElementById("Usercontent").value.trim();
+            const dma = document.getElementById("UserDate").value.trim();
+            if (Title === "" || texto === "") return alert("Type Something!");
+
+            try {
+                await addDoc(collection(db, "dados"), { 
+                    titulo: Title,
+                    text: texto,
+                    timestamp: new Date()
+                });
+                alert("Created Post!");
+                window.location.href = "index.html"
+            } catch (e) {
+                console.error("Error by saving: ", e);
+                alert("Error by saving data.");
+            }
+        };
+
+        window.getData = async function() {
+            const q = query(collection(db, "dados"), orderBy("timestamp", "desc"));
+            const querySnapshot = await getDocs(q);
+            const dataList = document.getElementById("dataList");
+            dataList.innerHTML = "";
+
+            let container = document.getElementById("container");
+            container.innerHTML = "";
+
+            querySnapshot.forEach((doc) => {
+
+            });
+        };
+    </script>
+
+</body>
+</html>
