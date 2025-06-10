@@ -16,7 +16,7 @@
     <ul id="dataList"></ul>
     <textarea type="text" class="ForumCreat" id="userTitle" placeholder="Title" rows="0" cols="50"></textarea>
     <textarea type="text" class="ForumCreat" id="Usercontent" placeholder="Content" rows="0" cols="50"></textarea> 
-    <input type="date" class="ForumCreat" id="UserDate" value="" placeholder="Content"></input>
+    <input type="date" class="ForumCreat" id="UserDate"></input>
     <button id="Suby" onclick="saveData()">Submit</button>
 
     <script type="module">
@@ -39,7 +39,7 @@
         window.saveData = async function() {
             const Title = document.getElementById("userTitle").value.trim();
             const texto = document.getElementById("Usercontent").value.trim();
-            const dma = document.getElementById("UserDate").value.trim();
+            const dma = document.getElementById("UserDate").value.trim() || new Date().toISOString().split('T')[0];
             if (Title === "" || texto === "") return alert("Type Something!");
 
             try {
