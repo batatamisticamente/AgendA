@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camisa Branca Masculina</title>
+    <link rel="stylesheet" href="css/EstilosTelaInteira.css">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Agdasima:wght@400&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap');
+
+    #B {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    .Box {
+        border: solid rgba(0, 0, 0, 0.251) 0.3vh;
+        border-radius: 1vh;
+        transition: 1000ms;
+        background-color: white;
+        margin-bottom: 1vh;
+        cursor: default;
+    }
+
+    .Box:hover {
+        z-index: 1000;
+        transform: scale(1.2);
+        margin-left: 18.5vh;
+        margin-top: 2vh;
+        border: solid rgba(0, 0, 0, 0.64) 0.3vh;
+    }
+
+    #TituloAgenda {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        margin-left: 1vh;
+        display: inline-block;
+        transition: 500ms;
+        cursor: default;
+    }
+
+    #TituloAgenda:hover {
+        color: #9f9f9f;
+    }
+
+    #botão {
+        margin-left: 40vh;
+        width: 20vh;
+        height: 6vh;
+    }
+
+    </style>
+</head>
+<body>
+        <div id="AvaliaçõesMedia">
+            <h1 id="TituloAgenda">Agenda</h1><button onclick="Agendar()" id="botão">Agendar</button>
+
+        <div id="container">
+            <div>
+        </div>
+        <div id="BigBox"></div>
+        </div>
+    <script>
+
+        function Agendar() {
+            window.location.href = "Agendar.html";
+        }
+
+        const zoomImage = document.getElementById('image');
+        document.querySelector('.zoom-container').addEventListener('mousemove', function (e) {
+            const rect = this.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 150;
+            const y = ((e.clientY - rect.top) / rect.height) * 150;
+            zoomImage.style.backgroundPosition = `${x}% ${y}%`;
+        });
+
+    </script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB7GEojfZL3O9OwXc--apObjn9OYJhY9vM",
+        authDomain: "agenda-d8f25.firebaseapp.com",
+        projectId: "agenda-d8f25",
+        storageBucket: "agenda-d8f25.appspot.com",
+        messagingSenderId: "562634825695",
+        appId: "1:562634825695:web:6ee03ebd8bd29d98972e6a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function getData() {
+        const querySnapshot = await getDocs(query(collection(db, "dados"), orderBy("timestamp", "desc")));
+        const container = document.getElementById("container");
+        const MediumEstrelas = document.getElementById("Medium");
+        container.innerHTML = "";
+
+        let totalEstrelas = 0;
+
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const div = document.createElement("div");
+            div.className = "Box";
+
+            const timestamp = data.timestamp?.toDate?.().toLocaleDateString("pt-BR") || "Data desconhecida";
+            const title = document.createElement("p");
+            title.textContent = `${data.titulo || "{Sem Detalhes}"} - ${timestamp}`;
+            title.style.position = "relative";
+            title.style.top = "120%";
+            title.style.fontFamily = "'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif";
+            title.style.marginLeft = "2.5vh";
+
+            const extraText = document.createElement("p");
+            extraText.style.fontSize = "17px";
+            extraText.textContent = `${data.text || "{Sem Detalhes}"}`;
+            extraText.style.position = "relative";
+            extraText.style.color = "black";
+            extraText.style.fontFamily = "'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif";
+            extraText.style.top = "37%";
+            extraText.style.fontWeight = "700";
+            extraText.style.marginLeft = "2.5vh";
+
+            div.appendChild(title);
+            div.appendChild(extraText);
+            container.appendChild(div);
+
+            totalEstrelas += data.estrelas || 0;
+        });
+
+        const media = totalEstrelas / querySnapshot.size || 0;
+        if (MediumEstrelas) {
+            MediumEstrelas.textContent = `Média: ${media.toFixed(1)}`;
+        }
+    }
+
+    getData();
+</script>
+</body>
+</html>
